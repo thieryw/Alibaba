@@ -35,11 +35,40 @@ void append_list(struct DLL *l, int n)
         }
     }
 }
+int get_length(struct DLL *l)
+{
+    return(l->prec->index);
+}
+
+void remove_elem(struct DLL **l,int n,int length)
+{
+    struct DLL *temp = *l;
+    
+    if(n < 0 || n > length)
+    {
+        printf("Out of range!\n");
+        return;
+    }
+    if(temp->index != n)
+    {
+        remove_elem(&temp->prec, n, length);
+    }
+    else
+    {
+        temp->prec->next = temp->next;
+        temp->next->prec = temp->prec;
+        free(temp);
+    }
+    if (temp->index != 0)
+    {
+        temp->index = temp->index - 1;
+    }
+}
 
 void print_list(struct DLL *l)
 {
-    printf("%d\n",l->i);
-    if(l->next->index != 0)
+    printf("%d %d\n", l->i, l->index);
+    if (l->next->index != 0)
     {
         print_list(l->next);
     }
