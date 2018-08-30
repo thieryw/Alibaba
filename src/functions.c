@@ -83,6 +83,26 @@ void remove_elem(struct DLL **l,int n,int length)
     }
 }
 
+void transfer_from_list_to_new_list(struct DLL *l, struct DLL *nl, int index)
+{
+    struct DLL *temp;
+    
+    if(index < l->prec->index / 2)
+    {
+        for(temp = l ; temp->index != index ; temp = temp->next);
+    }
+    else
+    {
+        for(temp = l ; temp->index != index ; temp = temp->prec);
+    }
+
+    append_list(nl,temp->i);
+
+    remove_elem(&l,index,get_length(l));
+
+}
+
+
 void print_list(struct DLL *l)
 {
     printf("%d %d\n", l->i, l->index);
