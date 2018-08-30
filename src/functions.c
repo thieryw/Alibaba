@@ -43,6 +43,7 @@ int get_length(struct DLL *l)
 void remove_elem(struct DLL **l,int n,int length)
 {
     struct DLL *temp = *l;
+    struct DLL *temp2;
     
     if(n < 0 || n > length)
     {
@@ -55,9 +56,26 @@ void remove_elem(struct DLL **l,int n,int length)
     }
     else
     {
-        temp->prec->next = temp->next;
-        temp->next->prec = temp->prec;
-        free(temp);
+        if (temp->index != 0)
+        {
+            temp->prec->next = temp->next;
+            temp->next->prec = temp->prec;
+            free(temp);
+        }
+        else
+        {
+            for (temp = *l, temp = temp->next; temp->index != 0; temp = temp->next)
+            {
+                temp->index = temp->index - 1;
+            }
+            temp = *l;
+            temp = temp->next;
+            temp2 = temp->prec;
+            temp->prec = temp->prec->prec;
+            temp->prec->next = temp;
+            *l = temp;
+            free(temp2);
+        }
     }
     if (temp->index != 0)
     {
