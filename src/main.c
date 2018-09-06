@@ -7,20 +7,57 @@
 
 static void launch_tests();
 
+void create_and_print_list_of_thieves(struct DLL **pl_thieves)
+{
+    for (int i = 1; i <= 41; i++)
+    {
+        append_DLL(pl_thieves, i);
+    }
+    printf("List of participating thieves : ");
+    print_list(*pl_thieves);
+    printf("\n\n");
+}
+
+void eliminate_thieves(struct DLL **pl_thieves, struct DLL **pl_elim_thieves)
+{
+    int i = 1;
+    struct DLL *e = *pl_thieves;
+    while ((*pl_thieves)->next->next != *pl_thieves)
+    {
+        if (i % 3 == 0)
+        {
+            append_DLL(pl_elim_thieves, e->n);
+            e = e->prec;
+            del_elem_DLL(pl_thieves, e->next);
+        }
+        e = e->next;
+        i++;
+    }
+}
+
+void print_game_results(struct DLL *l_thieves, struct DLL *l_elim_thieves)
+{
+
+    printf("List of losers by order of elimination : ");
+    print_list(l_elim_thieves);
+    printf("\n\nList of winners : ");
+    print_list(l_thieves);
+}
+
 int main(int argc, char *argv[])
 {
 
     if (argc == 1)
     {
-        struct DLL *l_of_thieves = NULL;
-        for(int i = 1 ; i <= 41 ; i++)
-        {
-            append_DLL(&l_of_thieves,i);
-        }
-        print_list(l_of_thieves);
+        struct DLL *l_thieves = NULL;
+        struct DLL *l_elim_thieves = NULL;
 
+        create_and_print_list_of_thieves(&l_thieves);
+        eliminate_thieves(&l_thieves, &l_elim_thieves);
+        print_game_results(l_thieves, l_elim_thieves);
 
-        
+        free_DLL(&l_thieves);
+        free_DLL(&l_elim_thieves);
     }
     else
     {
