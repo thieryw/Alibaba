@@ -33,6 +33,7 @@ void eliminate_thieves(struct DLL **pl_thieves, struct DLL **pl_elim_thieves)
         e = e->next;
         i++;
     }
+
 }
 
 void print_game_results(struct DLL *l_thieves, struct DLL *l_elim_thieves)
