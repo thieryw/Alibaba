@@ -1,0 +1,162 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "DLL.h"
+
+
+
+void append_list(struct DLL **pl, __uint32_t n)
+{
+    struct DLL *temp;
+    
+    if(*pl == NULL)
+    {
+        *pl = malloc(sizeof(struct DLL));
+        (*pl)->next = *pl;
+        (*pl)->prec = *pl;
+        (*pl)->n = n;
+    }
+    else
+    {
+        temp = (*pl)->prec;
+        (*pl)->prec = malloc(sizeof(struct DLL));
+        (*pl)->prec->n = n;
+        (*pl)->prec->next = *pl;
+
+        if (*pl == (*pl)->next)
+        {
+            (*pl)->next = (*pl)->prec;
+            (*pl)->prec->prec = (*pl);
+        }
+        else
+        {
+        
+            (*pl)->prec->next = *pl;
+            (*pl)->prec->prec = temp;
+            temp->next = (*pl)->prec;
+        }
+    }
+}
+
+//void print_list(struct DLL *l)
+//{
+//    char str[2048]= "";
+//
+//    dll_to_string(str, l);
+//
+//    printf("%s\n", str);
+//
+//}
+//
+//static void _dll_to_string(char *str, struct DLL *l, struct DLL *e)
+//{
+//
+//    char _str[12]; 
+//
+//    sprintf(_str, "%d ", e->n);
+//
+//    strcat(str, _str);
+//
+//    if (e->next != l) {
+//        _dll_to_string(str, l, e->next);
+//    }
+//
+//}
+//
+//void dll_to_string(char *str, struct DLL *l)
+//{
+//    _dll_to_string(str, l, l);
+//}
+
+int get_list_length(struct DLL *l)
+{
+    if (l != NULL)
+    {
+        int i = 1;
+        struct DLL *e;
+        for (e = l->next; e != l; e = e->next)
+        {
+            i = i + 1;
+        }
+        return(i);
+    }
+    else
+    {
+        return(0);
+    }
+}
+
+
+static int get_str_length(char *str)
+{
+    int i = 0;
+
+    while(str[i] != '\0')
+    {
+        i++;
+    }
+
+    return(i);
+}
+
+
+
+static void _dll_to_string(char **pstr, struct DLL *l, struct DLL *e)
+{
+    char _str[12] = "";
+
+    sprintf(_str, "%d ", e->n);
+
+    //int str_length = get_str_length(*pstr);
+    int str_length = strlen(*pstr);
+
+    //int _str_length = get_str_length(_str);
+    int _str_length = strlen(_str);
+
+    char *new_str = malloc(sizeof(char) * (str_length + _str_length + 1));
+
+    sprintf(new_str, "%s%s", *pstr, _str);
+
+    /*
+    for (int i = 0; i < str_length; i++)
+    {
+        new_str[i] = (*pstr)[i];
+    }
+
+    for (int i = 0; i < _str_length; i++)
+    {
+        new_str[i + str_length ] = _str[i];
+    }
+
+    new_str[str_length + _str_length] = '\0';
+    */
+
+    free(*pstr);
+
+    *pstr = new_str;
+
+    if (e->next != l)
+    {
+        _dll_to_string(pstr, l, e->next);
+    }
+}
+
+void dll_to_string(char **pstr, struct DLL *l)
+{
+
+    *pstr = malloc(sizeof(char));
+
+    (*pstr)[0] = '\0';
+
+    _dll_to_string(pstr, l, l);
+}
+
+void print_list(struct DLL *l) 
+ {
+    char *str = NULL;
+
+    dll_to_string(&str, l);
+
+    printf("%s\n", str);
+    free(str);
+}
